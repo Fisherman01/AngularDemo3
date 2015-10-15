@@ -1,0 +1,114 @@
+<!doctype html>
+<html ng-app="angularDemo3">
+<head>
+    <meta charset="utf-8">
+    <title>Buy your tank online</title>
+    <link href="css/style.css" rel="stylesheet">
+    <!-- Vendor libraries -->
+    <script src="lib/angular-v1.2.22.js"></script>
+    <!-- Application Files -->
+    <script src="js/app.js"></script>
+</head>
+<body ng-controller="DemoController as demo">
+<header>
+    <h1>Buy your tank online</h1>
+
+    <h2>– an Angular demo –</h2>
+</header>
+<!--  Products Container  -->
+<div class="list-group">
+    <!--  Product Container  -->
+    <div ng-repeat="vehicle in demo.vehicles" class="boxed">
+        <div class="rounded">
+            <h3>
+                {{vehicle.name}}
+                <em class="pull-right">{{vehicle.price | currency}}</em>
+            </h3>
+
+            <!--Image Gallery-->
+            <section ng-show="vehicle.images.length" id="imageList">
+                <ul>
+                    <!--<p class="thumbnail" ng-repeat="image in vehicle.images">-->
+                    <!--<img ng-src="{{image}}" />-->
+                    <!--</p>-->
+                    <li class="thumbnail" ng-repeat="image in vehicle.images">
+                        <img ng-src="{{image}}" id="img"/>
+                    </li>
+                </ul>
+            </section>
+
+            <!--tabs-->
+            <section class="tab" ng-controller="TabController as tab" id="tabsList">
+                <ul class="nav nav-pills">
+                    <li ng-class="{ active: tab.isSet(1) }">
+                        <a href ng-click="tab.setTab(1)">Description</a>
+                    </li>
+                    <li ng-class="{ active: tab.isSet(2) }">
+                        <a href ng-click="tab.setTab(2)">Specs</a>
+                    </li>
+                    <li ng-class="{ active: tab.isSet(3) }">
+                        <a href ng-click="tab.setTab(3)">Reviews</a>
+                    </li>
+                </ul>
+                <div ng-show="tab.isSet(1)">
+                    <h4>Description</h4>
+                    <blockquote>{{vehicle.description}}</blockquote>
+                </div>
+                <div ng-show="tab.isSet(2)">
+                    <h4>Specs</h4>
+                    <blockquote>{{vehicle.specs}}</blockquote>
+                </div>
+                <div ng-show="tab.isSet(3)">
+                    <h4>Reviews</h4>
+
+                    <!--  Product Reviews List -->
+                    <ul>
+                        <li ng-repeat="review in vehicle.reviews">
+                            <blockquote>
+                                <strong>Rating: {{review.rating}} - </strong>
+                                {{review.text}}
+                                <cite class="clearfix">—{{review.author}} on {{review.createdOn | date}}</cite>
+                                <!--<cite class="clearfix">—{{review.author}}</cite>-->
+                            </blockquote>
+                        </li>
+                    </ul>
+                    <!--review form -->
+                    <form name="reviewForm" ng-controller="ReviewController as reviewCtrl"
+                          ng-submit="reviewForm.$valid && reviewCtrl.addReview(vehicle)" novalidate>
+
+                        <!-- preview -->
+                        <blockquote>
+                            <strong>rating: {{reviewCtrl.review.rating}}</strong>
+                        </blockquote>
+                        {{reviewCtrl.review.text}}
+                        <cite class="clearfix">-{{reviewCtrl.review.author}}</cite>
+
+                        <!-- review form -->
+                        <h4>Submit a review</h4>
+                        <fieldset class="form-group">
+                            <select ng-model="reviewCtrl.review.rating" class="form-control"
+                                    ng-options="rating for rating in [5,4,3,2,1,0]" title="Rating" required>
+                                <option value>Rate this Tank</option>
+                            </select>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <textarea ng-model="reviewCtrl.review.text" class="form-control" placeholder="Write here..."
+                                      title="Review"></textarea>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <input ng-model="reviewCtrl.review.author" type="email" class="form-control"
+                                   placeholder="jimmyDean@example.org" title="Email" required/>
+                        </fieldset>
+                        <fieldset class="form-group">
+                            <input type="submit" class="btn btn-primary pull-right" value="Submit Review"/>
+                        </fieldset>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
